@@ -24,3 +24,9 @@ jar {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
+
+task distr(type: Copy) {
+   from(jar)
+   from("config")
+   into("$rootDir/distr")
+}
