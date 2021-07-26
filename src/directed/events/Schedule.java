@@ -112,7 +112,10 @@ public final class Schedule {
     public StatResult getStat() {
         synchronized (lock) {
             long saturationClock = saturationTime == null ? 0 : this.saturationClock - clockStart;
-            return ScheduleUtil.getStat(g, list, a.add(currentTime, addDelay), a.add(maxTime, addDelay), maxCount, eps, saturationTime, saturationClock);
+            Number saturationTime = this.saturationTime == null ? null : a.add(this.saturationTime, addDelay);
+            return ScheduleUtil.getStat(
+                g, list, a.add(currentTime, addDelay), a.add(maxTime, addDelay), maxCount, eps, saturationTime, saturationClock
+            );
         }
     }
 
@@ -197,13 +200,13 @@ public final class Schedule {
         }
         int edgeNum = g.getEdgeNum();
         for (int edge = 0; edge < edgeNum; edge++) {
-            if (!isEdgeSaturated(byEdge, edge, eps))
+            if (!isEdgeSaturated(byEdge, edge))
                 return false;
         }
         return true;
     }
 
-    private boolean isEdgeSaturated(Map<Integer, TreeSet<Double>> byEdge, int edge, double eps) {
+    private boolean isEdgeSaturated(Map<Integer, TreeSet<Double>> byEdge, int edge) {
         TreeSet<Double> onEdge = byEdge.get(edge);
         if (onEdge == null)
             return false;
